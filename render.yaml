@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: attagest
+    runtime: image
+    image:
+      url: php:8.4-fpm
+    buildCommand: |
+      apt-get update && apt-get install -y nginx curl zip unzip git libpq-dev \
+      && docker-php-ext-install pdo pdo_pgsql \
+      && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+      && composer install --no-dev --optimize-autoloader \
+      && cp .env.example .env \
+      && php artisan key:generate \
+      && php artisan config:cache \
+      && php artisan route:cache \
+      && php artisan view:cache
+    startCommand: |
+      php artisan migrate --force && \
+      php artisan serve --host=0.0.0.0 --port=10000
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        value: base64:XEkzNLPsCdJUxVXc9kVarChnyHhs+JjcIHpdRdbfffM=
+      - key: DATABASE_URL
+        fromDatabase:
+          name: attagest-db
+          property: connectionString

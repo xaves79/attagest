@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/index.php": {
+    "public/index.php": {
       "runtime": "vercel-php@0.6.0"
     }
   },
@@ -9,5 +9,6 @@
       "src": "/(.*)",
       "dest": "/public/index.php"
     }
-  ]
+  ],
+  "framework": null
 }

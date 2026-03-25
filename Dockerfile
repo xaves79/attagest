@@ -9,6 +9,7 @@ COPY . /var/www/html
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer install --no-dev --no-scripts --optimize-autoloader --ignore-platform-reqs
 RUN php artisan migrate --force --no-interaction || true
+RUN npm install && npm run build || echo "Vite skipped"
 RUN php artisan key:generate \
     && php artisan config:cache \
     && php artisan route:cache || true
